@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      .inline-title {
+        display: inline-block;
+        margin-right: 20px;
+        cursor: pointer;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+      }
+
+      .inline-title:hover {
+        background-color: #e0e0e0;
+      }
+
+      .recurring-form {
+        display: none; /* Hidden by default */
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Elevate Me</h1>
+    <h2 class="inline-title" onclick="showNewEventForm()">Add New Event</h2>
+    <h2 class="inline-title" onclick="showRecurringForm()">
+      Add Recurring Event
+    </h2>
+
+    <!-- New Event Form (visible by default) -->
+    <form id="newEventForm" action="/add" method="POST">
+      <label>Title:</label><br />
+      <input type="text" name="title" required /><br />
+
+      <label>Category:</label><br />
+      <select name="category"> 
+        <option value="School">School</option>
+        <option value="Work">Work</option>
+        <option value="Health">Health</option>
+        <option value="Personal">Personal</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <br />
+      <label>Date:</label><br />
+      <input type="date" name="date" required /><br />
+
+      <label>Time:</label><br />
+      <input type="time" name="time" /><br />
+
+      <label>Description:</label><br />
+      <textarea name="desc"></textarea><br />
+
+      <button type="submit">Add Event</button>
+    </form>
+
+    <!-- Recurring Event Form (hidden by default) -->
+    <form
+      id="recurringEventForm"
+      class="recurring-form"
+      action="{{ url_for('add_recurring') }}"
+      method="POST"
+    >
+      <label>Recurring Event Title:</label><br />
+      <input type="text" name="title" required /><br />
+      
+      <label>Category:</label><br />
+      <select name="category"> 
+        <option value="School">School</option>
+        <option value="Work">Work</option>
+        <option value="Health">Health</option>
+        <option value="Personal">Personal</option>
+        <option value="Other">Other</option>
+      </select><br />
+
+      <label>Start Date:</label><br />
+      <input type="date" name="start_date" required /><br />
+
+      <label>End Date:</label><br />
+      <input type="date" name="end_date" /><br />
+
+      <label>Recurrence Pattern:</label><br />
+      <select name="recurrence">
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option></select
+      ><br />
+
+      <label>Time:</label><br />
+      <input type="time" name="time" /><br />
+
+      <label>Description:</label><br />
+      <textarea name="desc"></textarea><br />
+
+      <button type="submit">Add Recurring Event</button>
+    </form>
+
+    <script>
+      function showNewEventForm() {
+        document.getElementById("newEventForm").style.display = "block";
+        document.getElementById("recurringEventForm").style.display = "none";
+      }
+
+      function showRecurringForm() {
+        document.getElementById("newEventForm").style.display = "none";
+        document.getElementById("recurringEventForm").style.display = "block";
+      }
+
+      // Show new event form by default
+      showNewEventForm();
+    </script>
+
+    <div style="margin-top: 20px">
+      <a href="{{ url_for('calendar_view') }}">
+        <button type="button">Calendar View</button>
+      </a>
+      <a href="{{ url_for('task_flow') }}">
+        <button type="button">Task Flow</button>
+      </a>
+    </div>
+  </body>
+</html>

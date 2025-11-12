@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <body class="p-4">
+    <h2>Edit Event</h2>
+
+    <form method="POST" action="{{ url_for('save_changes', id=event.id) }}">
+      <div class="mb-3">
+        <label>Title</label>
+        <input
+          type="text"
+          name="title"
+          value="{{ event.title }}"
+          class="form-control"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label>Category:</label><br />
+        <select name="category">
+          <option value="School">School</option>
+          <option value="Work">Work</option>
+          <option value="Health">Health</option>
+          <option value="Personal">Personal</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <br />
+      </div>
+      <div class="mb-3">
+        <label>Date</label>
+        <input
+          type="date"
+          name="date"
+          value="{{ event.date }}"
+          class="form-control"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label>Time</label>
+        <input
+          type="time"
+          name="time"
+          value="{{ event.time }}"
+          class="form-control"
+        />
+      </div>
+      <div class="mb-3">
+        <label>Description</label>
+        <textarea name="description" class="form-control">
+{{ event.description }}</textarea
+        >
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+      <a href="{{ url_for('task_flow') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </body>
+</html>
