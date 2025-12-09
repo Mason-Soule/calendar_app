@@ -67,8 +67,8 @@ Flask/Jinja2 templating
 📘 Project Purpose
 
 Elevate Me was created to deliver:
-A fast, simple calendar manager
-A visually clean interface
-Reliable recurring event automation
-Real-time terminal alerts
+A fast, simple calendar manager,
+a visually clean interface,
+reliable recurring event automation,
+and real-time terminal alerts
 Perfect for personal scheduling without overcomplicated features.
