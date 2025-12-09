@@ -34,31 +34,6 @@ A background task checks upcoming event timestamps.
 If an event will occur in the next 30 minutes, a warning is printed to terminal, e.g.:
 ⚠️ Reminder: "Doctor Appointment" starts in 28 minutes.
 
-🗂 Folder Structure
-calender_app/
-│
-├── app.py                # Main Flask application
-├── testing.py            # Development and debugging helper
-├── migrations/           # Database migration files
-│
-├── instance/
-│   └── <database>.sqlite # SQLite database storing all event data
-│
-├── templates/            # HTML templates rendered by Flask
-│   ├── add.html          # Page for adding new events
-│   ├── calendar.html     # Main calendar view
-│   ├── edit.html         # Edit an existing event
-│   ├── home.html         # Homepage / dashboard
-│   └── task_flow.html    # Task flow / event workflow view
-│
-├── __pycache__/          # Python bytecode cache
-│
-├── venv/                 # Virtual environment
-│
-├── package.json
-├── package-lock.json
-└── README.md
-
 🔧 Technologies Used
 
 Backend
