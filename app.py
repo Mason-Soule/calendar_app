@@ -1,7 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date, timedelta
-import calendar
 from flask_migrate import Migrate
 from flask_apscheduler import APScheduler
 
@@ -27,8 +26,26 @@ class Event(db.Model):
     date = db.Column(db.String(10), nullable=False)
     time= db.Column(db.String(5))
     description = db.Column(db.String(200))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow) #records timestamp of when event is entered
     category = db.Column(db.String(50))
+
+    def to_dict(self):
+        category_colors = {
+            "School": "#ffdc97",   # orange
+            "Work": "#bbdefb",     # blue
+            "Health": "#fefb98",   # yellow
+            "Personal": "#ffcdd2",      # pink
+            "Other": "#eeeeee"   # gray
+        }
+
+        return {
+            "id": self.id,
+            "title": self.title,
+            "date": self.date,
+            "time": self.time,
+            "description": self.description,
+            "color": category_colors.get(self.category, "#3788d8"),
+            "textColor": "black"
+        }
 
 scheduler = APScheduler()
 scheduler.init_app(app)
@@ -111,28 +128,26 @@ def save_changes(id):
     return redirect(url_for('task_flow'))
 
 @app.route('/calendar')
-
 def calendar_view():
-    today = date.today()
-    year = request.args.get('year', date.today().year, type=int)
-    month = request.args.get('month',date.today().month, type=int)
+    return render_template('calendar.html')
 
-    events = Event.query.order_by(Event.time).all()
-
-    events_by_date = {}
-
+@app.route('/day/<date>')
+def day_view(date):
+    events = Event.query.order_by(Event.date, Event.time).all()
+    dayEvents = []
     for e in events:
-        events_by_date.setdefault(e.date, []).append(e)
-        
-    cal = calendar.Calendar(firstweekday=6)
-    month_days = cal.monthdayscalendar(year, month)
-    month_name = calendar.month_name[month]
-    return render_template('calendar.html', year=year, 
-                           month=month, 
-                           month_name=month_name,
-                           month_days=month_days,
-                           events_by_date=events_by_date,
-                           today=today)
+        if e.date == date:
+            dayEvents.append(e)
+    return render_template('day.html', date=date, events=dayEvents)
+
+
+@app.route('/events')
+def events():
+    allEvents = []
+    events = Event.query.order_by(Event.date, Event.time).all()
+    for e in events:
+        allEvents.append(e.to_dict())
+    return jsonify(allEvents)
 
 @app.route('/add')
 def add():
@@ -141,17 +156,7 @@ def add():
 
 @app.route('/task')
 def task_flow():
-    events = Event.query.order_by(Event.date, Event.time).all()
-    current_events = []
-    day = request.args.get('day', date.today().day, type=int)
-    month = request.args.get('month',date.today().month, type=int)
-    year = request.args.get('year', date.today().year, type=int)
-    
-    #Only gets the events for that day
-    for event in events:
-        if day == int(event.date[8:]) and year == int(event.date[:4]) and month == int(event.date[5:7]):
-            current_events.append(event)
-    
+    current_events = currentEvents()
     return render_template('task_flow.html',events=current_events)
 
 def get_iterator(pattern, start_date, end_date):
@@ -217,6 +222,20 @@ def add_recurring():
     
     db.session.commit()
     return redirect(url_for('add'))
+
+def currentEvents():
+    events = Event.query.order_by(Event.date, Event.time).all()
+    current_events = []
+    day = request.args.get('day', date.today().day, type=int)
+    month = request.args.get('month',date.today().month, type=int)
+    year = request.args.get('year', date.today().year, type=int)
+    
+    #Only gets the events for that day
+    for event in events:
+        if day == int(event.date[8:]) and year == int(event.date[:4]) and month == int(event.date[5:7]):
+            current_events.append(event)
+    
+    return current_events
 
 if __name__ == '__main__':
     #This function starts Flask's development web server (With debugging)

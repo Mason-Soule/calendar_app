@@ -1,115 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
+  <meta charset="utf-8">
+  <title>Calendar</title>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+  <div class="header-bar">
     <h1>Elevate Me</h1>
-    <style>
-      .calendar {
-        table-layout: fixed;
-        width: 100%;
-      }
-      .calendar td {
-        height: 100px;
-        vertical-align: top;
-        padding: 5px;
-        border: 1px solid #ddd;
-      }
-      .date-number {
-        font-weight: bold;
-      }
-      .event {
-        background-color: #e3f2fd;
-        border-radius: 6px;
-        margin: 3px 0;
-        padding: 2px 4px;
-        font-size: 0.8em;
-      }
-    </style>
-
-    <style>
-        .event.Work {
-        background-color: #bbdefb; /* light blue */
-        }
-        .event.Personal {
-        background-color: #ffcdd2; /* light pink */
-        }
-        .event.Health {
-        background-color: #fefb98; /* light yello */
-        }
-        .event.School {
-        background-color: #ffdc97; /* Light Orange */
-        }
-        .event.Other {
-        background-color: #eeeeee; /* Light gray */
-        }
-    </style>
-  </head>
-  <body class="p-4">
-    <h2>{{ month_name }} {{ year }}</h2>
-
-    <div>
-      <a href="{{ url_for('calendar_view', year=year-1, month=month) }}"
-        >⏪ Previous Year</a
-      >
-      |
-      <a href="{{ url_for('calendar_view', year=year, month=month-1) }}"
-        >⬅️ Previous Month</a
-      >
-      |
-      <a href="{{ url_for('calendar_view', year=year, month=month+1) }}"
-        >➡️ Next Month</a
-      >
-      |
-      <a href="{{ url_for('calendar_view', year=year+1, month=month) }}"
-        >⏩ Next Year</a
-      >
+  
+    <div class="right-align">
+      <a href="{{ url_for('add') }}">
+        <button type="button">Add Events</button>
+      </a>
     </div>
+  </div>
 
-    <table class="calendar table table-bordered">
-      <thead>
-        <tr>
-          {% for day in ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'] %}
-          <th>{{ day }}</th>
-          {% endfor %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for week in month_days %}
-            <tr>
-            {% for day in week %}
-            {% if day == 0 %}
-                <td></td>
-            {% else %}
-                <td 
-                  class="calendar-day" 
-                  data-date="{{ year }}-{{ '%02d'|format(month) }}-{{ '%02d'|format(day) }}"
-                  {% if day == today.day and month == today.month and year == today.year %}
-                  style="background-color: lightgreen; font-weight: bold;"
-                  {% endif %}
-                  >
-                <div class="date-number">{{ day }}</div>
+  <div id="calendar"></div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const calendarEl = document.getElementById("calendar");
 
-                {% set day_str = "{}-{:02d}-{:02d}".format(year, month, day) %}
-                {% if day_str in events_by_date %}
-                    {% for e in events_by_date[day_str] %}
-                    <div class="event {{ e.category }}">
-                        <b>{{ e.title }}</b><br />
-                        <small>{{ e.time }}</small>
-                    </div>
-                    {% endfor %}
-                {% endif %}
-                </td>
-            {% endif %}
-            {% endfor %}
-            </tr>
-            {% endfor %}
-      </tbody>
-    </table>
-    <a href="{{ url_for('add') }}">
-      <button type="submit">Add Events</button>
-    </a>
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: "dayGridMonth",
+        events: "/events",
 
-    <a href="{{ url_for('task_flow') }}">
-      <button type="submit">Task Flow</button>
-    </a>
-  </body>
+        dateClick: function(info) {
+          window.location.href = `/day/${info.dateStr}`;
+        }
+      });
+
+      calendar.render();
+    });
+  </script>
+</body>
 </html>
