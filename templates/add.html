@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <meta charset="UTF-8" />
     <style>
       .inline-title {
@@ -8,8 +11,9 @@
         margin-right: 20px;
         cursor: pointer;
         padding: 10px;
-        background-color: #f0f0f0;
+        background-color:coral;
         border-radius: 5px;
+        margin-top: auto;
       }
 
       .inline-title:hover {
@@ -19,7 +23,7 @@
       .recurring-form {
         display: none; /* Hidden by default */
         margin-top: 20px;
-        padding: 20px;
+        padding: 10px;
         border: 1px solid #ddd;
         border-radius: 5px;
         background-color: #f9f9f9;
@@ -27,99 +31,115 @@
     </style>
   </head>
   <body>
-    <h1>Elevate Me</h1>
-    <h2 class="inline-title" onclick="showNewEventForm()">Add Event</h2>
-    <h2 class="inline-title" onclick="showRecurringForm()">
-      Add Recurring Event
-    </h2>
-
-    <!-- New Event Form (visible by default) -->
-    <form id="newEventForm" action="/add" method="POST">
-      <label>Title:</label><br />
-      <input type="text" name="title" required /><br />
-
-      <label>Category:</label><br />
-      <select name="category"> 
-        <option value="School">School</option>
-        <option value="Work">Work</option>
-        <option value="Health">Health</option>
-        <option value="Personal">Personal</option>
-        <option value="Other">Other</option>
-      </select>
-
-      <br />
-      <label>Date:</label><br />
-      <input type="date" name="date" required /><br />
-
-      <label>Time:</label><br />
-      <input type="time" name="time" /><br />
-
-      <label>Description:</label><br />
-      <textarea name="desc"></textarea><br />
-
-      <button type="submit">Add Event</button>
-    </form>
-
-    <!-- Recurring Event Form (hidden by default) -->
-    <form
-      id="recurringEventForm"
-      class="recurring-form"
-      action="{{ url_for('add_recurring') }}"
-      method="POST"
-    >
-      <label>Recurring Event Title:</label><br />
-      <input type="text" name="title" required /><br />
-      
-      <label>Category:</label><br />
-      <select name="category"> 
-        <option value="School">School</option>
-        <option value="Work">Work</option>
-        <option value="Health">Health</option>
-        <option value="Personal">Personal</option>
-        <option value="Other">Other</option>
-      </select><br />
-
-      <label>Start Date:</label><br />
-      <input type="date" name="start_date" required /><br />
-
-      <label>End Date:</label><br />
-      <input type="date" name="end_date" /><br />
-
-      <label>Recurrence Pattern:</label><br />
-      <select name="recurrence">
-        <option value="daily">Daily</option>
-        <option value="weekly">Weekly</option>
-        <option value="monthly">Monthly</option></select
-      ><br />
-
-      <label>Time:</label><br />
-      <input type="time" name="time" /><br />
-
-      <label>Description:</label><br />
-      <textarea name="desc"></textarea><br />
-
-      <button type="submit">Add Recurring Event</button>
-    </form>
-
-    <script>
-      function showNewEventForm() {
-        document.getElementById("newEventForm").style.display = "block";
-        document.getElementById("recurringEventForm").style.display = "none";
-      }
-
-      function showRecurringForm() {
-        document.getElementById("newEventForm").style.display = "none";
-        document.getElementById("recurringEventForm").style.display = "block";
-      }
-
-      // Show new event form by default
-      showNewEventForm();
+    <div class="page-layout">
+      <div class="left-panel">
+        <h1>Elevate Me</h1>
+      <div class="event-card">
+        <h2 class="inline-title" onclick="showNewEventForm()">Add Event</h2>
+        <h2 class="inline-title" onclick="showRecurringForm()">Add Recurring Event</h2>
+      <!-- New Event Form (visible by default) -->
+      <form id="newEventForm" action="/add" method="POST">
+        <label>Title:</label><br />
+        <input type="text" name="title" required /><br />
+  
+        <label>Category:</label><br />
+        <select name="category"> 
+          <option value="School">School</option>
+          <option value="Work">Work</option>
+          <option value="Health">Health</option>
+          <option value="Personal">Personal</option>
+          <option value="Other">Other</option>
+        </select>
+  
+        <br />
+        <label>Date:</label><br />
+        <input type="date" name="date" required /><br />
+  
+        <label>Time:</label><br />
+        <input type="time" name="time" /><br />
+  
+        <label>Description:</label><br />
+        <textarea name="desc"></textarea><br />
+        <button class="nav-btn" type="submit">Add Event</button>
+        <a class="nav-btn" href="{{ url_for('calendar_view') }}" method="POST">Calendar View</a>
+      </form>
+  
+      <!-- Recurring Event Form (hidden by default) -->
+      <form
+        id="recurringEventForm"
+        class="recurring-form"
+        action="{{ url_for('add_recurring') }}"
+        method="POST"
+      >
+        <label>Recurring Event Title:</label><br />
+        <input type="text" name="title" required /><br />
+        
+        <label>Category:</label><br />
+        <select name="category"> 
+          <option value="School">School</option>
+          <option value="Work">Work</option>
+          <option value="Health">Health</option>
+          <option value="Personal">Personal</option>
+          <option value="Other">Other</option>
+        </select><br />
+  
+        <label>Start Date:</label><br />
+        <input type="date" name="start_date" required /><br />
+  
+        <label>End Date:</label><br />
+        <input type="date" name="end_date" /><br />
+  
+        <label>Recurrence Pattern:</label><br />
+        <select name="recurrence">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option></select
+        ><br />
+  
+        <label>Time:</label><br />
+        <input type="time" name="time" /><br />
+  
+        <label>Description:</label><br />
+        <textarea name="desc"></textarea><br />
+  
+        <button type="submit">Add Recurring Event</button>
+      </form>
+  
+      <script>
+        function showNewEventForm() {
+          document.getElementById("newEventForm").style.display = "block";
+          document.getElementById("recurringEventForm").style.display = "none";
+        }
+  
+        function showRecurringForm() {
+          document.getElementById("newEventForm").style.display = "none";
+          document.getElementById("recurringEventForm").style.display = "block";
+        }
+  
+        // Show new event form by default
+        showNewEventForm();
+      </script>
+      </div>
+      </div>
+      <div class="calendar-column">
+        <div id="calendar"></div>
+      <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const calendarEl = document.getElementById("calendar");
+  
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: "dayGridMonth",
+          events: "/events",
+  
+          dateClick: function(info) {
+            window.location.href = `/day/${info.dateStr}`;
+          }
+        });
+  
+        calendar.render();
+      });
     </script>
-
-    <div style="margin-top: 20px">
-      <a href="{{ url_for('calendar_view') }}">
-        <button type="button">Calendar View</button>
-      </a>
     </div>
+      </div>
   </body>
 </html>

@@ -87,19 +87,28 @@ def home():
     events = Event.query.order_by(Event.date, Event.time).all()
     return render_template("home.html", events=events)
 
-@app.route('/add', methods=['POST'])
+@app.route('/add', methods=['GET', 'POST'])
+def add():
+    if request.method == 'POST':
+        title = request.form['title']
+        date = request.form['date']
+        time = request.form['time']
+        desc = request.form['desc']
+        group = request.form['category']
 
-def add_event():
-    title = request.form['title']
-    date = request.form['date']
-    time = request.form['time']
-    desc = request.form['desc']
-    group = request.form['category']
+        new_event = Event(
+            title=title,
+            date=date,
+            time=time,
+            description=desc,
+            category=group
+        )
+        db.session.add(new_event)
+        db.session.commit()
+        return redirect(url_for('add'))
 
-    new_event = Event(title=title, date=date, time=time, description=desc, category=group) 
-    db.session.add(new_event)
-    db.session.commit()
-    return redirect(url_for('add'))
+    events = Event.query.order_by(Event.date, Event.time).all()
+    return render_template('add.html', events=events)
 
 @app.route('/delete/<int:id>', methods=["GET", "POST"])
 
@@ -107,7 +116,7 @@ def delete_event(id):
     event_to_delete = Event.query.get_or_404(id)
     db.session.delete(event_to_delete)
     db.session.commit()
-    return redirect(url_for('task_flow'))
+    return redirect(url_for('day_view', date=event_to_delete.date))
 
 @app.route('/edit/<int:id>', methods=["POST"])
 
@@ -125,7 +134,7 @@ def save_changes(id):
     event.description = request.form['description']
     event.category = request.form['category']
     db.session.commit()
-    return redirect(url_for('task_flow'))
+    return redirect(url_for('day_view', date=event.date))
 
 @app.route('/calendar')
 def calendar_view():
@@ -148,11 +157,6 @@ def events():
     for e in events:
         allEvents.append(e.to_dict())
     return jsonify(allEvents)
-
-@app.route('/add')
-def add():
-    events = Event.query.order_by(Event.date, Event.time).all()
-    return render_template('add.html', events=events)
 
 @app.route('/task')
 def task_flow():

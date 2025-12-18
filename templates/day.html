@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
 <body>
-
   <h1>Elevate Me</h1>
   <h2>Events for {{ date }}</h2>
   {% if events %}
@@ -35,9 +37,7 @@
   <p>No tasks today!</p>
   {% endif %}
 
-  <a href="{{ url_for('calendar_view') }}" method="POST">
-    <button type="submit">Calendar View</button>
-  </a>
+  <a class="nav-btn" href="{{ url_for('calendar_view') }}" method="POST">Calendar View</a>
 
 </body>
 </html>

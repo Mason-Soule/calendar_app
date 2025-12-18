@@ -1,0 +1,49 @@
+body {
+  background-color:teal;
+}
+
+.header-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.right-align {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.nav-btn{
+  display: inline-block;
+  padding: 14px 28px;
+  font-size: 16px;
+  border: 1px solid #333;
+  background: #eee;
+  color: black;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.event-card{
+  border: 1px solid #ccc;
+  padding: 25px;
+  margin-bottom: auto;
+}
+
+.page-layout {
+  align-items: flex-start;
+  display: flex;
+  gap: 10px;
+}
+
+.calendar-column {
+  flex: 1;
+  margin-top: 16px;
+}
+
+.left-panel{
+  display: flex;
+  flex-direction: column;
+  width: 470;
+}
