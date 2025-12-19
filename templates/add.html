@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>Elevate Me</title>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -8,42 +9,45 @@
     <style>
       .inline-title {
         display: inline-block;
+        color:#f1f5f2;
         margin-right: 20px;
         cursor: pointer;
         padding: 10px;
-        background-color:coral;
+        background-color:#5c4033;
         border-radius: 5px;
         margin-top: auto;
       }
 
       .inline-title:hover {
-        background-color: #e0e0e0;
+        background-color: #1e293b;
       }
 
       .recurring-form {
-        display: none; /* Hidden by default */
-        margin-top: 20px;
+        display: inline-block;
+        color:#f1f5f2;
+        margin-right: 20px;
+        cursor: pointer;
         padding: 10px;
-        border: 1px solid #ddd;
         border-radius: 5px;
-        background-color: #f9f9f9;
+        margin-top: auto;
       }
     </style>
   </head>
   <body>
     <div class="page-layout">
       <div class="left-panel">
-        <h1>Elevate Me</h1>
+        <h1 class="title">Elevate Me</h1>
       <div class="event-card">
         <h2 class="inline-title" onclick="showNewEventForm()">Add Event</h2>
         <h2 class="inline-title" onclick="showRecurringForm()">Add Recurring Event</h2>
       <!-- New Event Form (visible by default) -->
       <form id="newEventForm" action="/add" method="POST">
-        <label>Title:</label><br />
+        <label class="text">Title:</label><br />
         <input type="text" name="title" required /><br />
   
-        <label>Category:</label><br />
+        <label class="text">Category:</label><br />
         <select name="category"> 
+          <option value="None">None</option>
           <option value="School">School</option>
           <option value="Work">Work</option>
           <option value="Health">Health</option>
@@ -52,13 +56,13 @@
         </select>
   
         <br />
-        <label>Date:</label><br />
+        <label class="text">Date:</label><br />
         <input type="date" name="date" required /><br />
   
-        <label>Time:</label><br />
+        <label class="text">Time:</label><br />
         <input type="time" name="time" /><br />
   
-        <label>Description:</label><br />
+        <label class="text">Description:</label><br />
         <textarea name="desc"></textarea><br />
         <button class="nav-btn" type="submit">Add Event</button>
         <a class="nav-btn" href="{{ url_for('calendar_view') }}" method="POST">Calendar View</a>
@@ -75,7 +79,8 @@
         <input type="text" name="title" required /><br />
         
         <label>Category:</label><br />
-        <select name="category"> 
+        <select name="category">
+          <option value="None">None</option> 
           <option value="School">School</option>
           <option value="Work">Work</option>
           <option value="Health">Health</option>
@@ -102,7 +107,8 @@
         <label>Description:</label><br />
         <textarea name="desc"></textarea><br />
   
-        <button type="submit">Add Recurring Event</button>
+        <button class="nav-btn" type="submit">Add Event</button>
+        <a class="nav-btn" href="{{ url_for('calendar_view') }}" method="POST">Calendar View</a>
       </form>
   
       <script>
@@ -122,11 +128,11 @@
       </div>
       </div>
       <div class="calendar-column">
-        <div id="calendar"></div>
+        <div class="title" id="calendar"></div>
       <script>
       document.addEventListener("DOMContentLoaded", function () {
         const calendarEl = document.getElementById("calendar");
-  
+
         const calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: "dayGridMonth",
           events: "/events",

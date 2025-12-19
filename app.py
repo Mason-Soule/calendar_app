@@ -30,11 +30,12 @@ class Event(db.Model):
 
     def to_dict(self):
         category_colors = {
+            "None": "#FFFFFF",   # white
             "School": "#ffdc97",   # orange
             "Work": "#bbdefb",     # blue
             "Health": "#fefb98",   # yellow
-            "Personal": "#ffcdd2",      # pink
-            "Other": "#eeeeee"   # gray
+            "Personal": "#ffcdd2", # pink
+            "Other": "#eeeeee"     # gray
         }
 
         return {

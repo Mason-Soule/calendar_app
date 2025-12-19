@@ -10,14 +10,14 @@
 
 <body>
   <div class="header-bar">
-    <h1>Elevate Me</h1>
+    <h1 class="title">Elevate Me</h1>
   
     <div class="right-align">
       <a class="nav-btn" href="{{ url_for('add') }}">Add Events</a>
     </div>
   </div>
 
-  <div id="calendar"></div>
+  <div class="title" id="calendar"></div>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const calendarEl = document.getElementById("calendar");
