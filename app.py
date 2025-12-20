@@ -145,10 +145,14 @@ def calendar_view():
 def day_view(date):
     events = Event.query.order_by(Event.date, Event.time).all()
     dayEvents = []
+    DT_date = datetime.strptime(date, '%Y-%m-%d')
+    fullDate = DT_date.strftime("%A, %B %d")
     for e in events:
         if e.date == date:
+            if (e.time == ""):
+                e.time = "11:59"
             dayEvents.append(e)
-    return render_template('day.html', date=date, events=dayEvents)
+    return render_template('day.html', events=dayEvents, full_date=fullDate)
 
 
 @app.route('/events')

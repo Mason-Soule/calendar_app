@@ -4,28 +4,22 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <h1>Elevate Me</h1>
-  <h2>Events for {{ date }}</h2>
+  <h1 class="title">Elevate Me</h1>
+  <h2 class="title">Events for {{ full_date  }}</h2>
   {% if events %}
   <ul>
     {% for event in events %}
     <br />
-    <li>
-      <strong>{{ event.title }}</strong> - {{ event.date }} at {{event.time}}
-      <form
-        action="{{ url_for('delete_event', id=event.id) }}"
-        method="POST"
-        style="display: inline"
-      >
-        <button type="submit">Delete</button>
-      </form>
+    <li class="title">
+      <strong class="title">{{ event.title }}</strong class="title"> - {{ event.date }} at {{event.time}}
+      <a class="nav-btn" type="button" href="{{ url_for('delete_event', id=event.id) }}">Delete</a>
 
       <form
         action="{{ url_for('edit_event', id=event.id) }}"
         method="POST"
         style="display: inline"
       >
-        <button type="submit">Edit</button>
+        <button class="nav-btn" type="submit">Edit</button>
       </form>
 
       <br />
@@ -34,7 +28,7 @@
     {% endfor %}
   </ul>
   {% else %}
-  <p>No tasks today!</p>
+  <p class="text">No tasks today!</p>
   {% endif %}
 
   <a class="nav-btn" href="{{ url_for('calendar_view') }}" method="POST">Calendar View</a>
