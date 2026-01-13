@@ -86,3 +86,7 @@ body {
    border-color: #1e293b;
 }
 
+.exclude-days label {
+  display: block;
+  margin: 4px 0;
+}

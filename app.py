@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date, timedelta
 from flask_migrate import Migrate
 from flask_apscheduler import APScheduler
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+import calendar
 
 #Create the flask app object
 app = Flask(__name__)
@@ -111,7 +113,7 @@ def add():
     events = Event.query.order_by(Event.date, Event.time).all()
     return render_template('add.html', events=events)
 
-@app.route('/delete/<int:id>', methods=["GET", "POST"])
+@app.route('/delete/<int:id>', methods=["GET","POST"])
 
 def delete_event(id):
     event_to_delete = Event.query.get_or_404(id)
@@ -119,7 +121,7 @@ def delete_event(id):
     db.session.commit()
     return redirect(url_for('day_view', date=event_to_delete.date))
 
-@app.route('/edit/<int:id>', methods=["POST"])
+@app.route('/edit/<int:id>', methods=["GET","POST"])
 
 def edit_event(id):
     event = Event.query.get_or_404(id)
@@ -150,7 +152,7 @@ def day_view(date):
     for e in events:
         if e.date == date:
             if (e.time == ""):
-                e.time = "11:59"
+                e.time = "23:59"
             dayEvents.append(e)
     return render_template('day.html', events=dayEvents, full_date=fullDate)
 
@@ -203,8 +205,17 @@ def add_recurring():
     
     current_date = start_dt
     
+    exclude_days = request.form.getlist("exclude_days")
+    exclude_days = list(map(int, exclude_days))
+
+    for i in range(len(exclude_days)):
+        exclude_days[i] -= 1
+    
     if pattern == "daily":
         while current_date <= end_dt:
+            if(current_date.weekday() in exclude_days):
+                current_date += timedelta(days=1)
+                continue       
             date_str = current_date.strftime('%Y-%m-%d')
             new_event = Event(title=title, date=date_str, time=time, description=desc, category=group)
             db.session.add(new_event)
@@ -245,6 +256,7 @@ def currentEvents():
             current_events.append(event)
     
     return current_events
+
 
 if __name__ == '__main__':
     #This function starts Flask's development web server (With debugging)
