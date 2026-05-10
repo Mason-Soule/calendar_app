@@ -5,4 +5,4 @@
 /package-lock.json
 /package.json
 /testing.py
-/venv
+.venv
